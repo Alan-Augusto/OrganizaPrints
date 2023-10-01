@@ -12,6 +12,9 @@ import shutil
 
 pytesseract.pytesseract.tesseract_cmd = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
 
+# Define o diretório raiz do projeto na pasta "out"
+diretorio_saida = os.path.join(os.getcwd(), 'out')
+diretorio_trabalho = ''
 pasta_selecionada = ''
 
 # Função para extrair a data a partir do texto
@@ -34,7 +37,8 @@ def extrair_data(texto):
     return None
 
 # Função para converter todos os arquivos da pasta para PNG
-def converter_para_png(caminho_pasta):
+def converter_para_png(caminho_pasta, text_widget):
+    text_widget.insert(tk.END, f"Convertendo arquivos...\n")
     print("Convertendo arquivos para PNG...")
     print("=" * 50)
     for arquivo in os.listdir(caminho_pasta):
@@ -57,7 +61,10 @@ def converter_para_png(caminho_pasta):
 
         except Exception as e:
             print(f"Erro ao processar arquivo {arquivo}: {str(e)}")
-# Função para recortar a região de interesse (ROI) da imagem
+    
+    text_widget.insert(tk.END, f"Conversão finalizada! \n")
+    text_widget.insert(tk.END, "_" * 50 + "\n")
+
 def recortar_roi(imagem, x, y, w, h):
     roi = imagem[y:y+h, x:x+w]
     return roi
@@ -83,7 +90,7 @@ def processar_pasta(caminho_pasta, text_widget, progresso):
     # Mudar o diretório de trabalho para a pasta selecionada
     os.chdir(caminho_pasta)
 
-    converter_para_png(caminho_pasta)  # Converte todos os arquivos para PNG primeiro
+    converter_para_png(caminho_pasta, text_widget)  # Converte todos os arquivos para PNG primeiro
     renomeados = set()  # Conjunto para rastrear nomes de arquivos já renomeados
     lista_arquivos = os.listdir(caminho_pasta)
     tamanho_do_laco = len(lista_arquivos)
@@ -124,26 +131,31 @@ def processar_pasta(caminho_pasta, text_widget, progresso):
             text_widget.update()
             progresso['value'] = (indice + 1) / tamanho_do_laco * 100
     messagebox.showinfo("Processamento Concluído", "O processamento foi concluído com sucesso!")
-# Função para selecionar uma pasta usando o Tkinter File Dialog
-def selecionar_pasta():
+
+def selecionar_pasta(text_widget):
     global pasta_selecionada
+    global diretorio_trabalho
+
     pasta_selecionada = filedialog.askdirectory(title="Selecione uma pasta")
 
     # Verifica se uma pasta foi selecionada
     if pasta_selecionada:
         # Obtém o nome da pasta selecionada
         nome_pasta = os.path.basename(pasta_selecionada)
-
-        # Define o nome da pasta de destino com o novo nome
-        pasta_destino = os.path.join(os.path.dirname(pasta_selecionada), f"{nome_pasta}-old")
+        
+        # Define o caminho completo da pasta de destino na pasta "out"
+        pasta_destino = os.path.join(diretorio_saida, nome_pasta)
+        diretorio_trabalho = pasta_destino
 
         try:
+            text_widget.insert(tk.END, f"Copiando pasta. Aguarde. \n")
             # Copia a pasta selecionada para a pasta de destino
             shutil.copytree(pasta_selecionada, pasta_destino)
-            print("Pasta copiada para:", pasta_selecionada)
+
+            text_widget.insert(tk.END, f"Pasta copiada com sucesso, inicie o processamento!\n")
+            print("Pasta copiada para:", diretorio_trabalho)
         except Exception as e:
             messagebox.showerror("Erro ao copiar pasta", str(e))
-
 
 def fechar_janela():
     root.destroy()
@@ -214,11 +226,11 @@ class APP:
 
         # Botão para selecionar o caminho da pasta
         global pasta_selecionada
-        button_select_folder = ttk.Button(frame, text="Selecionar Pasta", command=selecionar_pasta)
+        button_select_folder = ttk.Button(frame, text="Selecionar Pasta", command=lambda:selecionar_pasta(text_widget))
         button_select_folder.grid(row=4, column=0, pady=10)
 
         # Botão para iniciar o processamento
-        button_start = ttk.Button(frame, text="Iniciar Processamento", command=lambda:processar_pasta(pasta_selecionada, text_widget, progresso))
+        button_start = ttk.Button(frame, text="Iniciar Processamento", command=lambda:processar_pasta(diretorio_trabalho, text_widget, progresso))
         button_start.grid(row=4, column=1, pady=10)
 
     def fechar_janela(self):
