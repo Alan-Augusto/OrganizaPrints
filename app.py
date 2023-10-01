@@ -2,6 +2,7 @@ import os
 import pytesseract
 import cv2
 import re
+import time
 import tkinter as tk
 from tkinter import filedialog
 from tkinter import ttk
@@ -39,8 +40,7 @@ def extrair_data(texto):
 # Função para converter todos os arquivos da pasta para PNG
 def converter_para_png(caminho_pasta, text_widget):
     text_widget.insert(tk.END, f"Convertendo arquivos...\n")
-    print("Convertendo arquivos para PNG...")
-    print("=" * 50)
+    text_widget.update()
     for arquivo in os.listdir(caminho_pasta):
         if not arquivo.lower().endswith(('.jpg', '.jpeg', '.gif', '.bmp', '.tiff', '.tif')):  # Se não for um arquivo suportado
             continue  # Pule este arquivo
@@ -64,6 +64,7 @@ def converter_para_png(caminho_pasta, text_widget):
     
     text_widget.insert(tk.END, f"Conversão finalizada! \n")
     text_widget.insert(tk.END, "_" * 50 + "\n")
+    text_widget.update()
 
 def recortar_roi(imagem, x, y, w, h):
     roi = imagem[y:y+h, x:x+w]
@@ -87,7 +88,7 @@ def update_image(arquivo, data, caminho_arquivo, renomeados, caminho_pasta, text
     os.rename(caminho_arquivo, novo_nome)
 
 def processar_pasta(caminho_pasta, text_widget, progresso):
-    # Mudar o diretório de trabalho para a pasta selecionada
+
     os.chdir(caminho_pasta)
 
     converter_para_png(caminho_pasta, text_widget)  # Converte todos os arquivos para PNG primeiro
@@ -128,14 +129,18 @@ def processar_pasta(caminho_pasta, text_widget, progresso):
                         text_widget.insert(tk.END, f"Data não encontrada para arquivo [{arquivo}]\n")
             
             text_widget.insert(tk.END, "_" * 50 + "\n")
+            text_widget.see(tk.END)
             text_widget.update()
             progresso['value'] = (indice + 1) / tamanho_do_laco * 100
+    copy_results(text_widget)
     messagebox.showinfo("Processamento Concluído", "O processamento foi concluído com sucesso!")
 
 def selecionar_pasta(text_widget):
     global pasta_selecionada
     global diretorio_trabalho
-
+    global diretorio_saida
+    delete_all_folders_in_directory(diretorio_saida)
+    
     pasta_selecionada = filedialog.askdirectory(title="Selecione uma pasta")
 
     # Verifica se uma pasta foi selecionada
@@ -149,13 +154,63 @@ def selecionar_pasta(text_widget):
 
         try:
             text_widget.insert(tk.END, f"Copiando pasta. Aguarde. \n")
+            text_widget.update()
             # Copia a pasta selecionada para a pasta de destino
             shutil.copytree(pasta_selecionada, pasta_destino)
 
-            text_widget.insert(tk.END, f"Pasta copiada com sucesso, inicie o processamento!\n")
+            text_widget.insert(tk.END, f"A pasta selecionada está pronta!\n")
+            text_widget.insert(tk.END, "_" * 50 + "\n")
+            text_widget.insert(tk.END, f"INICIE O PRCESSAMENTO\n")
+            text_widget.update()
             print("Pasta copiada para:", diretorio_trabalho)
         except Exception as e:
             messagebox.showerror("Erro ao copiar pasta", str(e))
+
+def delete_all_folders_in_directory(directory):
+    for root_folder, subfolders, files in os.walk(directory):
+        for subfolder in subfolders:
+            folder_to_delete = os.path.join(root_folder, subfolder)
+            try:
+                shutil.rmtree(folder_to_delete)
+                print(f"Pasta apagada: {folder_to_delete}")
+            except PermissionError:
+                print(f"Erro ao apagar pasta: {folder_to_delete}. Aguardando e tentando novamente...")
+                time.sleep(2)  # Espera por um curto período antes de tentar novamente
+                try:
+                    shutil.rmtree(folder_to_delete)
+                    print(f"Pasta apagada na segunda tentativa: {folder_to_delete}")
+                except Exception as e:
+                    print(f"Erro ao apagar pasta na segunda tentativa: {folder_to_delete} - {str(e)}")
+
+def copy_results(text_widget):
+    global diretorio_trabalho
+    global pasta_selecionada
+    
+    if not diretorio_trabalho or not pasta_selecionada:
+        text_widget.insert(tk.END, "Erro: Pasta de trabalho ou pasta selecionada não definida.\n")
+        return
+    
+    try:
+        nome_pasta_selecionada = os.path.basename(pasta_selecionada)
+        pasta_destino = os.path.join(os.path.dirname(pasta_selecionada), f"{nome_pasta_selecionada}-ordenada")
+        
+        text_widget.insert(tk.END, f"Salvando resultados em: {pasta_destino}\n")
+        text_widget.update()
+        text_widget.see(tk.END)
+        
+        # Copia a pasta de trabalho para a pasta de destino
+        shutil.copytree(diretorio_trabalho, pasta_destino)
+    
+    except Exception as e:
+        text_widget.insert(tk.END, f"Erro ao copiar resultados: {str(e)}\n")
+        text_widget.update()
+        text_widget.see(tk.END)
+    
+    # Agora, exclua a pasta de trabalho
+    text_widget.insert(tk.END, f"Limpando arquivos temporários...\n")
+    text_widget.update()
+    text_widget.see(tk.END)
+    delete_all_folders_in_directory(diretorio_saida)
 
 def fechar_janela():
     root.destroy()
@@ -176,7 +231,7 @@ def main():
     label.grid(row=0, column=0, columnspan=2, pady=10)
 
     # Cria um widget de texto rolável para exibir mensagens
-    text_widget = scrolledtext.ScrolledText(frame, wrap=tk.WORD, width=40, height=10)
+    text_widget = scrolledtext.ScrolledText(frame, wrap=tk.WORD, width=40, height=20)
     text_widget.grid(row=1, column=0, columnspan=2, pady=10)
 
     progress_bar = ttk.Progressbar(frame, length=300, mode='determinate')
