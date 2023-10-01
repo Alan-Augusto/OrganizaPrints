@@ -1,27 +1,54 @@
 # OrganizaPrints
 
-## Princípios
+## Visão Geral
 
-O OrganizaPrints é uma ferramenta desenvolvida para organizar sequências de prints de histórico de localizações do Google em ordem cronológica.
-Quando a quantidade de imagens se torna grande, a tarefa de organizar manualmente esses prints pode se tornar árdua e demorada.
-A ideia principal por trás deste projeto é automatizar esse processo, permitindo que o sistema analise o conteúdo de cada imagem, extraia a data relevante e renomeie a foto com base nessa data.
+No mundo atual, o armazenamento de históricos de localização pelo Google tornou-se uma prática comum. Embora inicialmente possa parecer invasivo, essa informação pode ser uma valiosa ferramenta para advogados na obtenção de provas. No entanto, a tarefa de organizar e ordenar os prints enviados pelo cliente pode ser desafiadora e demorada. É nesse contexto que surge o **OrganizaPrints**, uma aplicação desenvolvida para auxiliar os advogados na ordenação cronológica de prints do Google.
+
+O **OrganizaPrints** é uma ferramenta projetada para automatizar o processo de organização de sequências de prints de histórico de localizações do Google, tornando-o mais eficiente e preciso.
 
 ## Download
 
-Basta selecionar acessar o link <a href="">clicando aqui.</a>
+Para baixar o **OrganizaPrints**, siga um dos métodos abaixo:
 
-## Funcionamento
+- **Download Direto**: Você pode baixar a última versão do OrganizaPrints clicando [aqui](https://downgit.github.io/#/home?url=https://github.com/Alan-Augusto/OrganizaPrints/blob/main/dist/OrganizaPrints.zip).
 
-O OrganizaPrints opera de acordo com os seguintes passos:
+- **Download a partir do Repositório**:
+  - Acesse a pasta "dist" do repositório.
+  - Faça o download do arquivo OrganizaPrints.zip.
 
-1. **Seleção da Pasta**: O usuário seleciona uma pasta que contém os prints de histórico de localizações do Google. Isso é feito através da interface gráfica fornecida pelo OrganizaPrints.
+## Como Funciona
 
-2. **Conversão para PNG**: Antes de processar as imagens, o sistema verifica e converte todos os arquivos de imagem na pasta selecionada para o formato PNG. Isso garante que todas as imagens estejam em um formato uniforme para facilitar a análise.
+O OrganizaPrints opera em alguns passos simples para facilitar a organização dos prints:
 
-3. **Análise do Conteúdo**: O OrganizaPrints utiliza a biblioteca Tesseract OCR para extrair o texto das imagens. Ele busca por datas nos prints no formato "X de Y de Z".
+1. **Seleção da Pasta**: O usuário seleciona a pasta que contém os prints de histórico de localizações do Google por meio da interface gráfica fornecida pelo OrganizaPrints.
 
-4. **Renomeação das Imagens**: Quando uma data é encontrada em um print, o OrganizaPrints renomeia o arquivo da imagem com a data encontrada, seguindo o formato "AAAA-MM-DD.png". Caso uma data não seja encontrada na imagem, o sistema tenta recortar áreas específicas da imagem e realizar uma nova análise para identificar a data.
+2. **Conversão para PNG**: Antes de processar as imagens, o sistema verifica e converte todos os arquivos de imagem na pasta selecionada para o formato PNG, garantindo uniformidade.
 
-5. **Feedback ao Usuário**: Durante o processo de renomeação, o OrganizaPrints fornece feedback ao usuário na interface gráfica, exibindo informações sobre cada imagem processada. Isso ajuda o usuário a acompanhar o progresso do processo.
+3. **Análise do Conteúdo**: Utilizando a biblioteca Tesseract OCR, o OrganizaPrints extrai o texto das imagens, buscando datas no formato "X de Y de Z".
 
-6. **Conclusão do Processamento**: Após processar todas as imagens na pasta selecionada, o OrganizaPrints exibe uma mensagem informando que o processamento foi concluído com sucesso.
+4. **Renomeação das Imagens**: Quando uma data é encontrada em um print, o OrganizaPrints renomeia o arquivo da imagem com a data no formato "AAAA-MM-DD.png". Se uma data não for encontrada, o sistema tenta recortar áreas específicas da imagem para uma nova análise.
+
+5. **Feedback ao Usuário**: Durante o processo de renomeação, o OrganizaPrints fornece feedback na interface gráfica, exibindo informações sobre cada imagem processada.
+
+6. **Conclusão do Processamento**: Após processar todas as imagens na pasta selecionada, o OrganizaPrints exibe uma mensagem de conclusão bem-sucedida.
+
+7. **Diretório de Saída**: Após o processamento, uma cópia da pasta original é criada ao lado da pasta selecionada, com o sufixo "-reordenada".
+
+## Dados Importantes
+
+- A taxa de acurácia das análises varia em torno de 94%. Esse valor representa o pior caso observado nos testes.
+- A acurácia pode variar dependendo da imagem e da proporção do print.
+- É aconselhável sempre verificar os resultados e fazer ajustes manuais nas imagens não renomeadas.
+- Imagens com datas semelhantes recebem sufixos diferentes, por exemplo:
+  - 2023-12-25
+  - 2023-12-25(2)
+  - 2023-12-25(3)
+- A formatação da data é invertida em relação ao padrão brasileiro para que a ordenação seja feita de forma alfanumérica.
+
+## Contato
+
+Se você tiver dúvidas, sugestões ou quiser relatar problemas, não hesite em entrar em contato:
+
+- **Alan Augusto**
+- Email: augustoalan56@gmail.com
+- Telefone: (31) 9 9997-8009
