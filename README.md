@@ -2,9 +2,13 @@
 
 ## Princípios
 
-O OrganizaPrints é uma ferramenta desenvolvida para organizar sequências de prints de histórico de localizações do Google em ordem cronológica. 
-Quando a quantidade de imagens se torna grande, a tarefa de organizar manualmente esses prints pode se tornar árdua e demorada. 
+O OrganizaPrints é uma ferramenta desenvolvida para organizar sequências de prints de histórico de localizações do Google em ordem cronológica.
+Quando a quantidade de imagens se torna grande, a tarefa de organizar manualmente esses prints pode se tornar árdua e demorada.
 A ideia principal por trás deste projeto é automatizar esse processo, permitindo que o sistema analise o conteúdo de cada imagem, extraia a data relevante e renomeie a foto com base nessa data.
+
+## Download
+
+Basta selecionar acessar o link <a href="">clicando aqui.</a>
 
 ## Funcionamento
 
