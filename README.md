@@ -10,11 +10,13 @@ O **OrganizaPrints** é uma ferramenta projetada para automatizar o processo de 
 
 Para baixar o **OrganizaPrints**, siga um dos métodos abaixo:
 
-- **Download Direto**: Você pode baixar a última versão do OrganizaPrints clicando [aqui](https://downgit.github.io/#/home?url=https://github.com/Alan-Augusto/OrganizaPrints/blob/main/dist/OrganizaPrints.zip).
+- **Download Direto**: Você pode baixar a última versão do OrganizaPrints clicando [aqui](https://docs.google.com/uc?export=download&id=1WECUwH45NeZpmnfBNIXOKhW9GS5z5P65).
 
 - **Download a partir do Repositório**:
   - Acesse a pasta "dist" do repositório.
   - Faça o download do arquivo OrganizaPrints.zip.
+ 
+Para utilizar, basta extrair a pasta e colocá-la em seu diretório de interesse.
 
 ## Como Funciona
 
